@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.3.1/jspdf.umd.min.js"></script>
+
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'style/ticket.css' %}">
+</head>
+<body onload="downloadPDF()">
+<div  id="pdfContainer">
+    <div class="main-content">
+        <div class="ticket">
+            <div class="ticket__main">
+                <div class="header">{{routeob.train_no.train_name}}</div>
+                <div class="info passenger">
+                    <div class="info__item">Passenger</div>
+                    <div class="info__detail">{{userob.username}}</div>
+                </div>
+                <div class="info platform"> <span>Ticket </span><span>NO:</span>
+                    
+                    <div class="number">
+                        <div>{{bookob.book_id}}</div>
+                    </div>
+                </div>
+                <div class="info departure">
+                    <div class="info__item">From:</div>
+                    <div class="info__detail">{{routeob.from_location.place_name}}</div>
+                </div>
+                <div class="info arrival">
+                    <div class="info__item">To:</div>
+                    <div class="info__detail">{{routeob.to_location.place_name}}</div>
+                </div>
+                <div class="info date">
+                    <div class="info__item">Date</div>
+                    <div class="info__detail">{{bookob.date_of_journey}}</div>
+                </div>
+                <div class="info time">
+                    <div class="info__item">Time</div>
+                    <div class="info__detail">{{routeob.arrival_time}}</div>
+                </div>
+                
+                <div class="info carriage">
+                    <div class="info__item">Price</div>
+                    <div class="info__detail">{{bookob.class_no.price}}</div>
+                </div>
+                
+                <div class="info carriage">
+                    <div class="info__item">class</div>
+                    <div class="info__detail">{{bookob.class_no.class_no.class_name}}</div>
+                </div>
+                <div class="info seat">
+                    <div class="info__item">Seat</div>
+                    <div class="info__detail">{{seat_no}}</div>
+                </div>
+                <div class="fineprint">
+                    <p>Boarding begins 30 minutes before departure. Snacks available for purchase from The {{routeob.train_no.train_name}}.</p>
+                    <p>This ticket is Non-refundable • Indian Railway Authority</p>
+                </div>
+        </div>
+    </div>
+    </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.0/html2pdf.bundle.min.js"></script>
+<script>
+    function downloadPDF() {
+        let confirmed = confirm(`Do you want to download the Ticket ?`);
+      if(!confirmed){
+        return;
+      }
+         window.jsPDF = window.jspdf.jsPDF;
+         const doc = new jsPDF();
+         const pdfContainer = document.getElementById('pdfContainer');
+         const options = {
+             html2canvas: {
+                 scale: 2 
+             },
+             callback: function (pdf) {
+                 doc.save('download.pdf');
+             }
+         };
+         html2pdf().from(pdfContainer).set(options).save();
+     }
+</script> 
+</body>
+</html>
